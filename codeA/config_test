@@ -1,0 +1,20 @@
+# smallest reasonable configuration file
+label baseline
+datafile seattle
+R0 2.6
+individualfile 1
+summaryfilename summaryfile.txt
+logfilename logfile.txt
+tractfilename tractsfile.txt
+individualfilename individualfile.txt
+randomnumberseed 1
+seedinfected 5
+seedinfecteddaily 0
+quarantine 0
+responseday 30
+ascertainmentfraction 1
+ascertainedisolation 1
+ascertainmentdelay 1
+antiviralpolicy	none
+AVEi 1
+runlength 250

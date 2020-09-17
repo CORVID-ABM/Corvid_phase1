@@ -1,0 +1,61 @@
+#!/bin/bash
+# batch run
+
+#sed 's/randomnumberseed 1/randomnumber $i/g' config-baseline.txt 
+
+#./corvid config_A1
+declare -a seeds
+#for ((n=1;n<=10; n++)) 
+#do 
+#  seeds+=($RANDOM)
+#done 
+
+#for s in ${seeds[@]}
+#do
+#   echo $s
+#done > seeds.txt 
+
+#seeds=(30969 21264 26769 13270 14763 10145 30746 6668 16592 7216)
+seeds=(22624 14486 10520 32058 3227 15022 6091 17392 24335 32607 17392)
+for seed in ${seeds[@]}
+do 
+for i in 30 60 90
+ do
+   echo "${seed}"
+    SF="A1-D${i}-S${seed}-summary.txt"
+    LF="A1-D${i}-S${seed}-log.txt"
+    TF="A1-D${i}-S${seed}-tracts.txt"
+    IDF="A1-D${i}-S${seed}-individuals.txt"
+    sed  "s/ssdd/${seed}/g;s/ssff/${SF}/g;s/llff/${LF}/g;s/ttff/${TF}/g;s/iiff/${IDF}/g;s/rday/${i}/g" config-A1 > "config_a1_D${i}_S${seed}"
+    #./corvid "config_a1_D${i}_S${seed}"
+done
+done
+#seeds=(30969 21264 26769 13270 14763 10145 30746 6668 16592 7216)
+for seed in ${seeds[@]} 
+do
+  for i in 30 60 90 
+    do
+	echo "$seed"
+    	SF="A2-D${i}-S${seed}-summary.txt"
+    	LF="A2-D${i}-S${seed}-log.txt"
+    	TF="A2-D${i}-S${seed}-tracts.txt"
+    	IDF="A2-D${i}-S${seed}-individuals.txt"
+    	sed  "s/ssdd/${seed}/g;s/ssff/${SF}/g;s/llff/${LF}/g;s/ttff/${TF}/g;s/iiff/${IDF}/g;s/rday/${i}/g" config-A2 > "config_a2_D${i}_S${seed}"
+    	./corvid "config_a2_D${i}_S${seed}"
+	done
+done
+
+for seed in ${seeds[@]}
+do
+  for i in 30 60 90 
+	do 
+	   echo "${seed}"
+    	   SF="A3-D${i}-S${seed}-summary.txt"
+    	   LF="A3-D${i}-S${seed}-log.txt"
+     	   TF="A3-D${i}-S${seed}-tracts.txt"
+    	   IDF="A3-D${i}-S${seed}-individuals.txt"
+    	   sed  "s/ssdd/${seed}/g;s/ssff/${SF}/g;s/llff/${LF}/g;s/ttff/${TF}/g;s/iiff/${IDF}/g;s/rday/${i}/g" config-A3 > "config_a3_D${i}_S${seed}"
+ 	   ./corvid "config_a3_D${i}_S${seed}"
+done
+done
+

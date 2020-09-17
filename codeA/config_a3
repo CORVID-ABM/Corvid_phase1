@@ -1,0 +1,21 @@
+# basic configuration file for metro seattle
+label A3-Quarantine-on-symptoms
+datafile seattle
+R0 2.6
+runlength 250
+individualfile 0
+summaryfilename A3-D30-S6091-summary.txt
+logfilename A3-D30-S6091-log.txt
+tractfilename A3-D30-S6091-tracts.txt
+individualfilename A3-D30-S6091-individuals.txt
+randomnumberseed 6091
+seedinfected 5
+seedinfecteddaily 0
+responseday 30
+quarantine 1
+quarantinelength 14
+ascertainmentfraction 1
+ascertainedisolation 1
+ascertainmentdelay 1
+antiviralpolicy	treatmentonly
+AVEi 1
