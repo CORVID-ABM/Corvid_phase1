@@ -1,0 +1,27 @@
+# smallest reasonable configuration file
+label scenario B1
+datafile seattle
+R0 2
+individualfile 0
+summaryfilename ssff 
+logfilename llff
+tractfilename ttff
+individualfilename iiff
+randomnumberseed ssdd
+runlength 250
+seedinfected 5
+seedinfecteddaily 0
+quarantine 0
+quarantineSampled 0
+responseday rrdd
+ascertainmentfraction 1
+ascertainedisolation 0
+ascertainmentdelay 1
+antiviralpolicy	none
+antiviralpolicySampled treatmentonly
+sampledSize sszz
+sampledDay ssaa
+AVEi 1
+AVEiSampled 1
+knownPositiveIsolation 1
+knownPositiveFraction 1
