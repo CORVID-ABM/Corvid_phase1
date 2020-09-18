@@ -1,0 +1,42 @@
+#!/bin/bash
+# batch run
+
+#sed 's/randomnumberseed 1/randomnumber $i/g' config-baseline.txt 
+
+#./corvid config_A1
+declare -a seeds
+for ((n=1;n<=9; n++)) 
+do 
+  seeds+=($RANDOM)
+done 
+
+for s in ${seeds[@]}
+do
+   echo $s
+done > seeds.txt 
+
+#seeds=(22624 14486 10520 32058 3227 15022 6091 17392 24335 32607)
+seeds=(17392)
+for seed in ${seeds[@]}
+do
+for p in 5
+do
+for d in 0 1 3 7 14 28
+do
+ for X in 1000 10000 50000 100000 
+ do  
+  for i in 30 60 90
+   do 
+    echo "${seed}"
+     SF="F3-D${i}-S${seed}-X${X}-T${d}-summary.txt"
+     LF="F3-D${i}-S${seed}-X${X}-T${d}-log.txt"
+     TF="F3-D${i}-S${seed}-X${X}-T${d}-tracts.txt"
+     IDF="F3-D${i}-S${seed}-X${X}-T${d}-individuals.txt"
+    sed  "s/ssdd/${seed}/g;s/ssff/${SF}/g;s/llff/${LF}/g;s/ttff/${TF}/g;s/iiff/${IDF}/g;s/rrdd/${i}/g;s/sszz/${X}/g;s/ssaa/${d}/g;s/ppss/${p}/g" config-EF3 > "config_f3_${i}_${seed}_${X}_${d}"
+    ./corvid "config_f3_${i}_${seed}_${X}_${d}"
+    done
+  done
+ done
+done
+done
+
