@@ -1,0 +1,548 @@
+---
+title: "Graphs for Main Paper"
+author: "LU"
+date: "8/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+list_of_files_A1_30 <- intersect(list.files(pattern = "A1-D30-S17392"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A1_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A1_30 = symptomatic/length(list_of_files_A1_30)
+symptomatic_cum_A1_30 = symptomatic_cum/length(list_of_files_A1_30)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+list_of_files_A2_60 <- intersect(list.files(pattern = "A2-D30-S17392"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_60) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_30 = symptomatic/length(list_of_files_A2_60)
+symptomatic_cum_A2_30 = symptomatic_cum/length(list_of_files_A2_60)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+
+list_of_files_A3_60 <- intersect(list.files(pattern = "A3-D30-S17392"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_60) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_30 = symptomatic/length(list_of_files_A3_60)
+symptomatic_cum_A3_30 = symptomatic_cum/length(list_of_files_A3_60)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/C26")
+list_of_files <- intersect(list.files(pattern = "D30-S17392"), list.files(pattern = "X"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/D26")
+list_of_files <- intersect(list.files(pattern = "D30-S17392"), list.files(pattern = "X"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/B26_updated")
+list_of_files <- intersect(list.files(pattern = "D30-S17392"), list.files(pattern = "X"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26")
+list_of_files <- intersect(list.files(pattern = "D30-S17392"), list.files(pattern = "X"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/F26")
+list_of_files <- intersect(list.files(pattern = "D30-S17392"), list.files(pattern = "X"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+
+
+### Figure 1: Include 6 lines: A1, A2, A3, B1, B2, B3 (All: seed 17392, T7, X50K)
+
+```{r, fig.width=24, fig.height=19, echo=FALSE}
+par(mfrow=c(2,2))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l',ylab="number of symptomatic cases daily",xlab="days since introduction"
+,axes=FALSE, cex.lab=2)
+axis(1, at=seq(0,250,50), cex.axis=2)
+    axis(2, cex.axis=2)
+#,ylim=c(1,45769.1)
+lines(x=days, y=symptomatic_A2_30, lwd=1,lty=2)
+lines(x=days, y=symptomatic_A3_30, lwd=1,lty=3)
+lines(x=days, y=B1_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red")
+lines(x=days, y=B2_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=2)
+lines(x=days, y=B3_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=3)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+
+days <- 1:250
+plot(x=days, y=symptomatic_cum_A1_30, lwd=1, col = "black",type = 'l', ylab="number of cumulative symptomatic cases daily", xlab="days since introduction"
+,axes=FALSE, cex.lab=2)
+axis(1, at=seq(0,250,50), cex.axis=2)
+    axis(2, at=seq(0,240000,40000), cex.axis=2)
+#,ylim=c(1,45769.1)
+lines(x=days, y=symptomatic_cum_A2_30, lwd=1,lty=2)
+lines(x=days, y=symptomatic_cum_A3_30, lwd=1,lty=3)
+lines(x=days, y=B1_D30_S17392_X50000_T7$symptomatic_cum, lwd=1, col = "red")
+lines(x=days, y=B2_D30_S17392_X50000_T7$symptomatic_cum, lwd=1, col = "red", lty=2)
+lines(x=days, y=B3_D30_S17392_X50000_T7$symptomatic_cum, lwd=1, col = "red", lty=3)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+
+plot(x=NA, y=NA, xlab="", ylab="", main="", axes=FALSE, lwd=2, cex.main=1, cex.lab=0.8, ylim=c(0,5), xlim=c(0,250))
+legend("topleft", legend = c("baseline, no intervention", "isolate symptomatic", "isolate symptomatic and hh", "STQ isolate tested-positive",
+                         "STQ isolate tested-positive and hh", "STQ isolate tested-positive, symptomatic, and hh"),
+       col = c("black", "black", "black", "red", "red", "red"), lty = c(1, 2, 3, 1, 2, 3), cex=2.0, inset=0, bg="white")
+```
+
+### Figure 2: Include 5 lines: A1, B3 10K, B3 50K, B3 100K, B3 200K (All: seed 17392, T7)
+
+```{r,fig.width=24, fig.height=19, echo=FALSE}
+par(mfrow=c(2,2))
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', ylab="number of symptomatic cases daily",xlab="days since introduction",axes=FALSE, cex.lab=2)
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S17392_X10000_T7$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=1)
+lines(x=days, y=B3_D30_S17392_X100000_T7$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S17392_X200000_T7$symptomatic, lwd=1, col = "dark green", lty=1)
+axis(1, at=seq(0,250,50), cex.axis=2)
+    axis(2, cex.axis=2)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+
+plot(x=days, y=symptomatic_cum_A1_30, lwd=1, col = "black",type = 'l', ylab="number of cumulative symptomatic cases daily",xlab="days since introduction",axes=FALSE,cex.lab=2)
+axis(1, at=seq(0,250,50), cex.axis=2)
+    axis(2, at=seq(0,250000,50000), cex.axis=2)
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S17392_X10000_T7$symptomatic_cum, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T7$symptomatic_cum, lwd=1, col = "red", lty=1)
+lines(x=days, y=B3_D30_S17392_X100000_T7$symptomatic_cum, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S17392_X200000_T7$symptomatic_cum, lwd=1, col = "dark green", lty=1)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+plot(x=NA, y=NA, xlab="", ylab="", main="", axes=FALSE, lwd=2, cex.main=1, cex.lab=0.8, ylim=c(0,5), xlim=c(0,250))
+legend("top", legend = c("baseline, no intervention", "STQ 10K tests at 7-day freq, isolate tested-positive, symptomatic, and hh", 
+                             "STQ 50K tests at 7-day freq, isolate tested-positive, symptomatic, and hh",
+                             "STQ 100K tests at 7-day freq, isolate tested-positive, symptomatic, and hh", 
+                             "STQ 200K tests at 7-day freq, isolate tested-positive, symptomatic, and hh"),
+       col = c("black", "blue", "red", "brown", "dark green"), lty = c(1, 1, 1, 1, 1), cex=2.0, inset=0, bg="white")
+```
+
+### Figure 3: Include 5 lines: A1, B3 10K T1, B3 50K T7, B3 100K T14, B3 200K T28 (All: seed 17392)
+
+
+```{r, fig.width = 24, fig.height = 19, echo=FALSE}
+par(mfrow=c(2,2))
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.62 0))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l',ylab="number of symptomatic cases daily",xlab="days since introduction"
+,axes=FALSE, cex.lab=2)
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S17392_X10000_T1$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red")
+lines(x=days, y=B3_D30_S17392_X100000_T14$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S17392_X200000_T28$symptomatic, lwd=1, col = "dark green")
+axis(1, at=seq(0,250,50), cex.axis=2)
+    axis(2, cex.axis=2)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+
+plot(x=days, y=symptomatic_cum_A1_30, lwd=1, col = "black",type = 'l',ylab="number of cumulative symptomatic cases daily",xlab="days since introduction"
+,axes=FALSE, cex.lab=2)
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S17392_X10000_T1$symptomatic_cum, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T7$symptomatic_cum, lwd=1, col = "red")
+lines(x=days, y=B3_D30_S17392_X100000_T14$symptomatic_cum, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S17392_X200000_T28$symptomatic_cum, lwd=1, col = "dark green")
+axis(1, at=seq(0,250,50), cex.axis=2)
+    axis(2, at=seq(0,250000,50000), cex.axis=2)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+
+plot(x=NA, y=NA, xlab="", ylab="", main="", axes=FALSE, lwd=2, cex.main=1, cex.lab=0.8, ylim=c(0,5), xlim=c(0,250))
+legend("topleft", legend = c("baseline, no intervention", "STQ 10K tests at daily freq, isolate tested-positive, symptomatic, and hh", 
+                             "STQ 50K tests at 7-day freq, isolate tested-positive, symptomatic, and hh",
+                             "STQ 100K tests at 14-day freq, isolate tested-positive, symptomatic, and hh", 
+                             "STQ 200K tests at 28-day freq, isolate tested-positive, symptomatic, and hh"),
+       col = c("black", "blue", "red", "brown", "dark green"), lty = c(1, 1, 1, 1,1), cex = 2)
+```
+
+### Figure 4
+
+
+```{r,fig.width=7, fig.height=5, echo=FALSE}
+cases <- c("1:no interventn", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no interventn", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no interventn", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no interventn", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no interventn", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic), max(B2_D30_S17392_X50000_T7$symptomatic), 
+            max(B3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic), max(C2_D30_S17392_X50000_T7$symptomatic), 
+            max(C3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic), max(D2_D30_S17392_X50000_T7$symptomatic), 
+            max(D3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic), max(E2_D30_S17392_X50000_T7$symptomatic), 
+            max(E3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic), max(F2_D30_S17392_X50000_T7$symptomatic), 
+            max(F3_D30_S17392_X50000_T7$symptomatic))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=cases, y=num, group = scenario)) +
+  geom_point(aes(color=scenario),size = 4) + theme_bw() +labs(y= "number of symptomatic cases daily") + theme(legend.position="bottom")
+
+```
+
+```{r,fig.width=7, fig.height=5, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_cum_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic_cum), max(B2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(B3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic_cum), max(C2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(C3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic_cum), max(D2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(D3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic_cum), max(E2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(E3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic_cum), max(F2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(F3_D30_S17392_X50000_T7$symptomatic_cum))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=cases, y=num, group = scenario)) +
+  geom_point(aes(color=scenario),size = 4) + theme_bw() +labs(y= "number of cumulative symptomatic cases daily") + theme(legend.position="bottom")
+
+```
+
+```{r,fig.width=7, fig.height=5, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic), max(B2_D30_S17392_X50000_T7$symptomatic), 
+            max(B3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic), max(C2_D30_S17392_X50000_T7$symptomatic), 
+            max(C3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic), max(D2_D30_S17392_X50000_T7$symptomatic), 
+            max(D3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic), max(E2_D30_S17392_X50000_T7$symptomatic), 
+            max(E3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic), max(F2_D30_S17392_X50000_T7$symptomatic), 
+            max(F3_D30_S17392_X50000_T7$symptomatic))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=cases, y=num, group = scenario, fill=scenario))  + theme_bw() +labs(y= "number of symptomatic cases daily") + theme(legend.position="bottom") + geom_bar(stat="identity", position=position_dodge()) + scale_fill_brewer(palette="Blues")
+
+```
+
+```{r,fig.width=7, fig.height=5, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+
+num <- c(max(symptomatic_cum_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic_cum), max(B2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(B3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic_cum), max(C2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(C3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic_cum), max(D2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(D3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic_cum), max(E2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(E3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic_cum), max(F2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(F3_D30_S17392_X50000_T7$symptomatic_cum))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=cases, y=num, group = scenario, fill=scenario))  + theme_bw() +labs(y= "number of cumulative symptomatic cases daily") + theme(legend.position="bottom") + geom_bar(stat="identity", position=position_dodge()) + scale_fill_brewer(palette="Blues")
+
+```
+
+
+```{r,fig.width=21, fig.height=18, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_cum_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic_cum), max(B2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(B3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic_cum), max(C2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(C3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic_cum), max(D2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(D3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic_cum), max(E2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(E3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic_cum), max(F2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(F3_D30_S17392_X50000_T7$symptomatic_cum))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=scenario, y=num, group = cases)) +
+  geom_point(aes(color=cases),size = 7) + theme_bw() +labs(y= "number of cumulative symptomatic cases daily") + theme(legend.title = element_text(color = "black", size = 30),
+  legend.text = element_text(size = 25), axis.text=element_text(size=25),axis.title=element_text(size=30)) + scale_x_discrete(guide = guide_axis(angle = 90))
+
+
+```
+
+
+```{r,fig.width=31, fig.height=18, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_cum_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic_cum), max(B2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(B3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic_cum), max(C2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(C3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic_cum), max(D2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(D3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic_cum), max(E2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(E3_D30_S17392_X50000_T7$symptomatic_cum),
+       max(symptomatic_cum_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic_cum), max(F2_D30_S17392_X50000_T7$symptomatic_cum), 
+            max(F3_D30_S17392_X50000_T7$symptomatic_cum))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=scenario, y=num, group = cases)) +
+  geom_point(aes(color=cases),size = 14) + theme_bw() +labs(y= "number of cumulative symptomatic cases daily") + theme(legend.title = element_text(color = "black", size = 30),
+  legend.text = element_text(size = 25), axis.text=element_text(size=25),axis.title=element_text(size=30)) + scale_x_discrete(guide = guide_axis(angle = 25))
+
+
+```
+
+
+```{r,fig.width=21, fig.height=18, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic), max(B2_D30_S17392_X50000_T7$symptomatic), 
+            max(B3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic), max(C2_D30_S17392_X50000_T7$symptomatic), 
+            max(C3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic), max(D2_D30_S17392_X50000_T7$symptomatic), 
+            max(D3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic), max(E2_D30_S17392_X50000_T7$symptomatic), 
+            max(E3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic), max(F2_D30_S17392_X50000_T7$symptomatic), 
+            max(F3_D30_S17392_X50000_T7$symptomatic))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=scenario, y=num, group = cases)) +
+  geom_point(aes(color=cases),size = 7) + theme_bw() +labs(y= "number of symptomatic cases daily") + theme(legend.title = element_text(color = "black", size = 35),
+  legend.text = element_text(size = 25), axis.text=element_text(size=25),axis.title=element_text(size=30)) + scale_x_discrete(guide = guide_axis(angle = 90))
+
+
+```
+
+
+```{r,fig.width=31, fig.height=18, echo=FALSE}
+cases <- c("1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh", 
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh",
+           "1:no intervention", "2:Isolated tested", "3:Iso tested+hh", "4:iso tested+symptomatic+hh")
+num <- c(max(symptomatic_A1_30), max(B1_D30_S17392_X50000_T7$symptomatic), max(B2_D30_S17392_X50000_T7$symptomatic), 
+            max(B3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(C1_D30_S17392_X50000_T7$symptomatic), max(C2_D30_S17392_X50000_T7$symptomatic), 
+            max(C3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(D1_D30_S17392_X50000_T7$symptomatic), max(D2_D30_S17392_X50000_T7$symptomatic), 
+            max(D3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(E1_D30_S17392_X50000_T7$symptomatic), max(E2_D30_S17392_X50000_T7$symptomatic), 
+            max(E3_D30_S17392_X50000_T7$symptomatic),
+       max(symptomatic_A1_30), max(F1_D30_S17392_X50000_T7$symptomatic), max(F2_D30_S17392_X50000_T7$symptomatic), 
+            max(F3_D30_S17392_X50000_T7$symptomatic))
+scenario <- c("1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "1. STQ, simple random sampling", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "2. STQ, cluster sampling on communities", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "3. STQ, cluster sampling on schools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "4. STQ, random sampling of 2 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools", "5. STQ, random sampling of 5 person pools")
+peak_df <- data.frame(cases, num, scenario)
+
+# Change line types by groups (supp)
+ggplot(peak_df, aes(x=scenario, y=num, group = cases)) +
+  geom_point(aes(color=cases),size = 14) + theme_bw() +labs(y= "number of symptomatic cases daily") + theme(legend.title = element_text(color = "black", size = 30),
+  legend.text = element_text(size = 25), axis.text=element_text(size=25),axis.title=element_text(size=30)) + scale_x_discrete(guide = guide_axis(angle = 25))
+
+
+```

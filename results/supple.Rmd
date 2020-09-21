@@ -1,0 +1,381 @@
+---
+title: "Supplementary Materials"
+author: "LU"
+date: "8/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+list_of_files <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "summary"))
+
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+ 
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  infected <- symptomatic *2
+  cumulativeinfected <- symptomatic_cum *2
+  newlyinfected <- newlysym *2
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(infected, cumulativeinfected, newlyinfected, symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+list_of_files <- intersect(list.files(pattern = "A2-D30"), list.files(pattern = "summary"))
+
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  infected <- symptomatic *2
+  cumulativeinfected <- symptomatic_cum *2
+  newlyinfected <- newlysym *2
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(infected, cumulativeinfected, newlyinfected, symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    assign(name, df)
+  }
+}
+```
+
+
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+
+list_of_files <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  infected <- symptomatic *2
+  cumulativeinfected <- symptomatic_cum *2
+  newlyinfected <- newlysym *2
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(infected, cumulativeinfected, newlyinfected, symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/B26_updated")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "X50000"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/D26")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "X50000"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(infected,newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/F26")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "X50000"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(infected,newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/R")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "X50000"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(infected,newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum, newlysym)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+
+Figure S1: 
+#### Check the 10 seeds for A1,B3 Day 30
+```{r, fig.width=14, fig.height=14,echo=FALSE}
+par(mfrow=c(2,2))
+days <- 1:250
+plot(x=days, y=A1_D30_S10520$symptomatic, lwd=1, col = "red",type = 'l',ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,79000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=A1_D30_S14486$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=A1_D30_S15022$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=A1_D30_S17392$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=A1_D30_S22624$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=A1_D30_S24335$symptomatic, lwd=1, col = "black")
+lines(x=days, y=A1_D30_S32058$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=A1_D30_S17392$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=A1_D30_S32607$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=A1_D30_S6091$symptomatic, lwd=1, col = "brown")
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+legend("topleft", legend = c("seed10520", "seed14486", "seed15022","seed17392","seed22624" ,"seed24335", "seed32058", 
+                             "seed17392", "seed32607", "seed6091"),
+       col = c("black","red","blue","orange", "grey","brown", "purple", "green", "yellow", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+
+plot(x=days, y=B3_D30_S10520_X50000_T1$symptomatic, lwd=1, col = "red",type = 'l', ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,79000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S14486_X50000_T1$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S15022_X50000_T1$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=B3_D30_S17392_X50000_T1$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=B3_D30_S22624_X50000_T1$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S24335_X50000_T1$symptomatic, lwd=1, col = "black")
+lines(x=days, y=B3_D30_S32058_X50000_T1$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T1$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=B3_D30_S32607_X50000_T1$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=B3_D30_S6091_X50000_T1$symptomatic, lwd=1, col = "brown")
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+legend("topleft", legend = c("seed10520", "seed14486", "seed15022","seed17392","seed22624" ,"seed24335", "seed32058", 
+                             "seed17392", "seed32607", "seed6091"),
+       col = c("black","red","blue","orange", "grey","brown", "purple", "green", "yellow", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+
+
+plot(x=days, y=B3_D30_S10520_X50000_T14$symptomatic, lwd=1, col = "red",type = 'l',ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,79000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S14486_X50000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S15022_X50000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=B3_D30_S17392_X50000_T14$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=B3_D30_S22624_X50000_T14$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S24335_X50000_T14$symptomatic, lwd=1, col = "black")
+lines(x=days, y=B3_D30_S32058_X50000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=B3_D30_S32607_X50000_T14$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=B3_D30_S6091_X50000_T14$symptomatic, lwd=1, col = "brown")
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+legend("topleft", legend = c("seed10520", "seed14486", "seed15022","seed17392","seed22624" ,"seed24335", "seed32058", 
+                             "seed17392", "seed32607", "seed6091"),
+       col = c("black","red","blue","orange", "grey","brown", "purple", "green", "yellow", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+
+plot(x=days, y=B3_D30_S10520_X50000_T28$symptomatic, lwd=1, col = "red",type = 'l',ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,79000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=B3_D30_S14486_X50000_T28$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S15022_X50000_T28$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=B3_D30_S17392_X50000_T28$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=B3_D30_S22624_X50000_T28$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=B3_D30_S24335_X50000_T28$symptomatic, lwd=1, col = "black")
+lines(x=days, y=B3_D30_S32058_X50000_T28$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=B3_D30_S17392_X50000_T28$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=B3_D30_S32607_X50000_T28$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=B3_D30_S6091_X50000_T28$symptomatic, lwd=1, col = "brown")
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+legend("topleft", legend = c("seed10520", "seed14486", "seed15022","seed17392","seed22624" ,"seed24335", "seed32058", 
+                             "seed17392", "seed32607", "seed6091"),
+       col = c("black","red","blue","orange", "grey","brown", "purple", "green", "yellow", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+
+```
+
+
+
+
+## Figure S2:
+
+
+## Figure S3:
+```{r, fig.width=10, fig.height=9, echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=A1_D30_S17392$newlysym, lwd=1, col = "black",type = 'l',ylab="number of new symptomatic cases daily",xlab="days since introduction"
+,axes = FALSE)
+#,ylim=c(1,45769.1)
+lines(x=days, y=A2_D30_S17392$newlysym, lwd=1,lty=5)
+lines(x=days, y=A3_D30_S17392$newlysym, lwd=1,lty=3)
+lines(x=days, y=D1_D30_S17392_X50000_T7$newlysym, lwd=1,col = "red")
+lines(x=days, y=D2_D30_S17392_X50000_T7$newlysym, lwd=1,lty=5,col = "red")
+lines(x=days, y=D3_D30_S17392_X50000_T7$newlysym, lwd=1,lty=3,col = "red")
+lines(x=days, y=F1_D30_S17392_X50000_T7$newlysym, lwd=1,col = "blue")
+lines(x=days, y=F2_D30_S17392_X50000_T7$newlysym, lwd=1,lty=5,col = "blue")
+lines(x=days, y=F3_D30_S17392_X50000_T7$newlysym, lwd=1,lty=3,col = "blue")
+axis(1, at=seq(0,250,50), cex.axis=0.85)
+    axis(2, at=seq(0,6000,500),cex.axis=0.85)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+plot(x=NA, y=NA, xlab="", ylab="", main="", axes=FALSE, lwd=2, cex.main=1, cex.lab=0.8, ylim=c(0,5), xlim=c(0,250))
+legend("topleft", legend = c("baseline, no intervention", "isolate symptomatic", "isolate symptomatic and hh",
+                             "STQ cluster sampling on schools, isolate tested-positive", "STQ cluster sampling on schools, isolate tested-positive and symptomatic", 
+                             "STQ cluster sampling on schools, isolate tested-positive, symptomatic and hh", "STQ random sampling of 5 person pools, isolate tested-positive",
+                             "STQ random sampling of 5 person pools, isolate tested-positive and symtomatic", "STQ random sampling of 5 person pools, isolate tested-positive, symptomatic and hh"),
+       col = c("black", "black", "black", "red", "red", "red","blue", "blue", "blue"), lty = c(1, 2, 3, 1, 2, 3, 1, 2, 3), cex = 1)
+```
+
+## Figure S4:
+```{r, fig.width=10, fig.height=9, echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=A1_D30_S17392$symptomatic_cum, lwd=1, col = "black",type = 'l', main="Cumulative Infections",ylab="number of cumulative symptomatic cases daily",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=A2_D30_S17392$symptomatic_cum, lwd=1,lty=5)
+lines(x=days, y=A3_D30_S17392$symptomatic_cum, lwd=1,lty=3)
+lines(x=days, y=D1_D30_S17392_X50000_T7$symptomatic_cum, lwd=1,col = "red")
+lines(x=days, y=D2_D30_S17392_X50000_T7$symptomatic_cum, lwd=1,lty=5,col = "red")
+lines(x=days, y=D3_D30_S17392_X50000_T7$symptomatic_cum, lwd=1,lty=3,col = "red")
+lines(x=days, y=F1_D30_S17392_X50000_T7$symptomatic_cum, lwd=1,col = "blue")
+lines(x=days, y=F2_D30_S17392_X50000_T7$symptomatic_cum, lwd=1,lty=5,col = "blue")
+lines(x=days, y=F3_D30_S17392_X50000_T7$symptomatic_cum, lwd=1,lty=3,col = "blue")
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+legend("topleft", legend = c("A1","A2", "A3","D1", "D2", "D3", "F1","F2", "F3"),
+       col = c("black", "black", "black", "red", "red", "red","blue", "blue", "blue"), lty = c(1, 2, 3, 1, 2, 3, 1, 2, 3), cex = 1)
+```
+
+
+```{r, fig.width=10, fig.height=9, echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=A1_D30_S17392$symptomatic, lwd=1, col = "black",type = 'l',ylab="number of symptomatic cases daily",xlab="days since introduction"
+,axes = FALSE)
+#,ylim=c(1,45769.1)
+lines(x=days, y=A2_D30_S17392$symptomatic, lwd=1,lty=5)
+lines(x=days, y=A3_D30_S17392$symptomatic, lwd=1,lty=3)
+lines(x=days, y=D1_D30_S17392_X50000_T7$symptomatic, lwd=1,col = "red")
+lines(x=days, y=D2_D30_S17392_X50000_T7$symptomatic, lwd=1,lty=5,col = "red")
+lines(x=days, y=D3_D30_S17392_X50000_T7$symptomatic, lwd=1,lty=3,col = "red")
+lines(x=days, y=F1_D30_S17392_X50000_T7$symptomatic, lwd=1,col = "blue")
+lines(x=days, y=F2_D30_S17392_X50000_T7$symptomatic, lwd=1,lty=5,col = "blue")
+lines(x=days, y=F3_D30_S17392_X50000_T7$symptomatic, lwd=1,lty=3,col = "blue")
+axis(1, at=seq(0,250,50), cex.axis=0.85)
+    axis(2, cex.axis=0.85)
+grid(nx = TRUE, ny = NULL, col = "lightgray", lty = 1)
+plot(x=NA, y=NA, xlab="", ylab="", main="", axes=FALSE, lwd=2, cex.main=1, cex.lab=0.8, ylim=c(0,5), xlim=c(0,250))
+legend("topleft", legend = c("baseline, no intervention", "isolate symptomatic", "isolate symptomatic and hh",
+                             "cluster sampling on schools, isolate tested-positive", "cluster sampling on schools, isolate tested-positive and symptomatic", 
+                             "cluster sampling on schools, isolate tested-positive, symptomatic and hh", "random sampling of 5 person pools, isolate tested-positive",
+                             "random sampling of 5 person pools, isolate tested-positive and symtomatic", "random sampling of 5 person pools, isolate tested-positive, symptomatic and hh"),
+       col = c("black", "black", "black", "red", "red", "red","blue", "blue", "blue"), lty = c(1, 2, 3, 1, 2, 3, 1, 2, 3), cex = 1)
+```
+

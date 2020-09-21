@@ -1,0 +1,916 @@
+---
+title: "E_one_seed"
+author: "LU"
+date: "5/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+list_of_files_A1_30 <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "S17392"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A1_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A1_30 = symptomatic/length(list_of_files_A1_30)
+symptomatic_cum_A1_30 = symptomatic_cum/length(list_of_files_A1_30)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+list_of_files_A2_30 <- intersect(list.files(pattern = "A2-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_30 = symptomatic/length(list_of_files_A2_30)
+symptomatic_cum_A2_30 = symptomatic_cum/length(list_of_files_A2_30)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A2_90 <- intersect(list.files(pattern = "A2-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_90) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_90 = symptomatic/length(list_of_files_A2_90)
+symptomatic_cum_A2_90 = symptomatic_cum/length(list_of_files_A2_90)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A3_30 <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_30 = symptomatic/length(list_of_files_A3_30)
+symptomatic_cum_A3_30 = symptomatic_cum/length(list_of_files_A3_30)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A3_90 <- intersect(list.files(pattern = "A3-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_90) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_90 = symptomatic/length(list_of_files_A3_90)
+symptomatic_cum_A3_90 = symptomatic_cum/length(list_of_files_A3_90)
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "S17392-X1000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D60"), list.files(pattern = "S17392-X1000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D90"), list.files(pattern = "S17392-X1000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "S17392-X10000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "S17392-X50000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "S17392-X100000"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "X200000"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D60"), list.files(pattern = "S17392-X10000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D60"), list.files(pattern = "S17392-X50000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D60"), list.files(pattern = "S17392-X100000"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D60"), list.files(pattern = "X200000"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D90"), list.files(pattern = "S17392-X10000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D90"), list.files(pattern = "S17392-X50000-"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D90"), list.files(pattern = "S17392-X100000"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/E26OneSeed")
+list_of_files <- intersect(list.files(pattern = "D90"), list.files(pattern = "X200000"))
+#name <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+```
+
+
+## Number of symptomatic cases daily
+### day 30 
+```{r, fig.width=14, fig.height=18, fig.cap="Number of symptomatic cases daily in Seattle.", echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+par(mfrow=c(3,2))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="Repeat sampling: once only on start date",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D30_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D30_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D30_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D30_S17392_X50000_T0$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D30_S17392_X50000_T0$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D30_S17392_X50000_T0$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D30_S17392_X100000_T0$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D30_S17392_X100000_T0$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D30_S17392_X100000_T0$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D30_S17392_X200000_T0$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D30_S17392_X200000_T0$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D30_S17392_X200000_T0$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every day",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D30_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D30_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D30_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D30_S17392_X50000_T1$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D30_S17392_X50000_T1$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D30_S17392_X50000_T1$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D30_S17392_X100000_T1$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D30_S17392_X100000_T1$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D30_S17392_X100000_T1$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D30_S17392_X200000_T1$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D30_S17392_X200000_T1$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D30_S17392_X200000_T1$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every 3 days",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D30_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D30_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D30_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D30_S17392_X50000_T3$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D30_S17392_X50000_T3$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D30_S17392_X50000_T3$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D30_S17392_X100000_T3$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D30_S17392_X100000_T3$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D30_S17392_X100000_T3$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D30_S17392_X200000_T3$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D30_S17392_X200000_T3$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D30_S17392_X200000_T3$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every 1 week",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D30_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D30_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D30_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D30_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D30_S17392_X100000_T7$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D30_S17392_X100000_T7$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D30_S17392_X100000_T7$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D30_S17392_X200000_T7$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D30_S17392_X200000_T7$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D30_S17392_X200000_T7$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every two weeks",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D30_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D30_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D30_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D30_S17392_X50000_T14$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D30_S17392_X50000_T14$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D30_S17392_X50000_T14$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D30_S17392_X100000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D30_S17392_X100000_T14$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D30_S17392_X100000_T14$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D30_S17392_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D30_S17392_X200000_T14$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D30_S17392_X200000_T14$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every four weeks",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D30_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D30_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D30_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D30_S17392_X50000_T28$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D30_S17392_X50000_T28$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D30_S17392_X50000_T28$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D30_S17392_X100000_T28$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D30_S17392_X100000_T28$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D30_S17392_X100000_T28$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D30_S17392_X200000_T28$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D30_S17392_X200000_T28$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D30_S17392_X200000_T28$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+```
+
+
+### day 60
+```{r, fig.width=14, fig.height=18, fig.cap="Number of symptomatic cases daily in Seattle.", echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+par(mfrow=c(3,2))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="Repeat sampling: once only on start date",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D60_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D60_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D60_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D60_S17392_X50000_T0$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D60_S17392_X50000_T0$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D60_S17392_X50000_T0$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D60_S17392_X100000_T0$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D60_S17392_X100000_T0$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D60_S17392_X100000_T0$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D60_S17392_X200000_T0$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D60_S17392_X200000_T0$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D60_S17392_X200000_T0$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every day",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D60_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D60_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D60_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D60_S17392_X50000_T1$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D60_S17392_X50000_T1$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D60_S17392_X50000_T1$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D60_S17392_X100000_T1$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D60_S17392_X100000_T1$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D60_S17392_X100000_T1$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D60_S17392_X200000_T1$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D60_S17392_X200000_T1$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D60_S17392_X200000_T1$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every 3 days",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D60_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D60_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D60_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D60_S17392_X50000_T3$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D60_S17392_X50000_T3$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D60_S17392_X50000_T3$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D60_S17392_X100000_T3$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D60_S17392_X100000_T3$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D60_S17392_X100000_T3$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D60_S17392_X200000_T3$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D60_S17392_X200000_T3$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D60_S17392_X200000_T3$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every 1 week",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D60_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D60_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D60_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D60_S17392_X50000_T7$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D60_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D60_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D60_S17392_X100000_T7$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D60_S17392_X100000_T7$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D60_S17392_X100000_T7$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D60_S17392_X200000_T7$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D60_S17392_X200000_T7$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D60_S17392_X200000_T7$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every two weeks",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D60_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D60_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D60_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D60_S17392_X50000_T14$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D60_S17392_X50000_T14$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D60_S17392_X50000_T14$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D60_S17392_X100000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D60_S17392_X100000_T14$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D60_S17392_X100000_T14$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D60_S17392_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D60_S17392_X200000_T14$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D60_S17392_X200000_T14$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every four weeks",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D60_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D60_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D60_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D60_S17392_X50000_T28$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D60_S17392_X50000_T28$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D60_S17392_X50000_T28$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D60_S17392_X100000_T28$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D60_S17392_X100000_T28$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D60_S17392_X100000_T28$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D60_S17392_X200000_T28$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D60_S17392_X200000_T28$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D60_S17392_X200000_T28$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+```
+
+### day 90 
+```{r, fig.width=14, fig.height=18, fig.cap="Number of symptomatic cases daily in Seattle.", echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+par(mfrow=c(3,2))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="Repeat sampling: once only on start date",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D90_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D90_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D90_S17392_X1000_T0$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D90_S17392_X50000_T0$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D90_S17392_X50000_T0$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D90_S17392_X50000_T0$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D90_S17392_X100000_T0$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D90_S17392_X100000_T0$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D90_S17392_X100000_T0$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D90_S17392_X200000_T0$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D90_S17392_X200000_T0$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D90_S17392_X200000_T0$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every day",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D90_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D90_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D90_S17392_X1000_T1$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D90_S17392_X50000_T1$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D90_S17392_X50000_T1$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D90_S17392_X50000_T1$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D90_S17392_X100000_T1$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D90_S17392_X100000_T1$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D90_S17392_X100000_T1$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D90_S17392_X200000_T1$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D90_S17392_X200000_T1$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D90_S17392_X200000_T1$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every 3 days",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D90_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D90_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D90_S17392_X1000_T3$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D90_S17392_X50000_T3$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D90_S17392_X50000_T3$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D90_S17392_X50000_T3$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D90_S17392_X100000_T3$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D90_S17392_X100000_T3$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D90_S17392_X100000_T3$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D90_S17392_X200000_T3$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D90_S17392_X200000_T3$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D90_S17392_X200000_T3$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every 1 week",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D90_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D90_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D90_S17392_X1000_T7$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D90_S17392_X50000_T7$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D90_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D90_S17392_X50000_T7$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D90_S17392_X100000_T7$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D90_S17392_X100000_T7$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D90_S17392_X100000_T7$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D90_S17392_X200000_T7$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D90_S17392_X200000_T7$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D90_S17392_X200000_T7$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every two weeks",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D90_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D90_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D90_S17392_X1000_T14$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D90_S17392_X50000_T14$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D90_S17392_X50000_T14$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D90_S17392_X50000_T14$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D90_S17392_X100000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D90_S17392_X100000_T14$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D90_S17392_X100000_T14$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D90_S17392_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D90_S17392_X200000_T14$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D90_S17392_X200000_T14$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+
+plot(x=days, y=symptomatic_A1_30, lwd=1, col = "black",type = 'l', main="every four weeks",ylab="symptomatic cases per day",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=E1_D90_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=E2_D90_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green", lty=5)
+lines(x=days, y=E3_D90_S17392_X1000_T28$symptomatic, lwd=1, col = "dark green", lty=3)
+lines(x=days, y=E1_D90_S17392_X50000_T28$symptomatic, lwd=1, col = "red")
+lines(x=days, y=E2_D90_S17392_X50000_T28$symptomatic, lwd=1, col = "red", lty=5)
+lines(x=days, y=E3_D90_S17392_X50000_T28$symptomatic, lwd=1, col = "red", lty=3)
+lines(x=days, y=E1_D90_S17392_X100000_T28$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=E2_D90_S17392_X100000_T28$symptomatic, lwd=1, col = "orange", lty=5)
+lines(x=days, y=E3_D90_S17392_X100000_T28$symptomatic, lwd=1, col = "orange", lty=3)
+lines(x=days, y=E1_D90_S17392_X200000_T28$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=E2_D90_S17392_X200000_T28$symptomatic, lwd=1, col = "blue", lty=5)
+lines(x=days, y=E3_D90_S17392_X200000_T28$symptomatic, lwd=1, col = "blue", lty=3)
+
+legend("topleft", legend = c("A1", "E1, 1k", "E1, 50k","E1, 100k","E1, 200k","E2, 1k", "E2, 50k", "E2, 100k", "E2, 200k", "E3, 1k", "E3, 50k", "E3, 100k", "E3, 200k"),
+       col = c("black", "dark green", "red", "orange", "blue","dark green", "red", "orange", "blue","dark green","red", "orange", "blue"), lty = c(1, 1, 1, 1,1, 2, 2, 2,2, 3, 3, 3, 3), cex = 1)
+```
+

@@ -1,0 +1,573 @@
+---
+title: "R0_3.32"
+author: "LU"
+date: "7/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+list_of_files_A1_30 <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A1_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A1_30 = symptomatic/length(list_of_files_A1_30)
+symptomatic_cum_A1_30 = symptomatic_cum/length(list_of_files_A1_30)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+list_of_files_A2_30 <- intersect(list.files(pattern = "A2-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_30 = symptomatic/length(list_of_files_A2_30)
+symptomatic_cum_A2_30 = symptomatic_cum/length(list_of_files_A2_30)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A2_90 <- intersect(list.files(pattern = "A2-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_90) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_90 = symptomatic/length(list_of_files_A2_90)
+symptomatic_cum_A2_90 = symptomatic_cum/length(list_of_files_A2_90)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A3_30 <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_30 = symptomatic/length(list_of_files_A3_30)
+symptomatic_cum_A3_30 = symptomatic_cum/length(list_of_files_A3_30)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A3_90 <- intersect(list.files(pattern = "A3-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_90) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_90 = symptomatic/length(list_of_files_A3_90)
+symptomatic_cum_A3_90 = symptomatic_cum/length(list_of_files_A3_90)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+list_of_files_A2_60 <- intersect(list.files(pattern = "A2-D60"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_60) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_60 = symptomatic/length(list_of_files_A2_60)
+symptomatic_cum_A2_60 = symptomatic_cum/length(list_of_files_A2_60)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files_A3_60 <- intersect(list.files(pattern = "A3-D60"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_60) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_60 = symptomatic/length(list_of_files_A3_60)
+symptomatic_cum_A3_60 = symptomatic_cum/length(list_of_files_A3_60)
+```
+
+```{r,include = FALSE}
+# R)_34
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+list_of_files_A1_30_34 <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A1_30_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A1_30_34 = symptomatic/length(list_of_files_A1_30_34)
+symptomatic_cum_A1_30_34 = symptomatic_cum/length(list_of_files_A1_30_34)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+list_of_files_A2_30_34 <- intersect(list.files(pattern = "A2-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_30_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_30_34 = symptomatic/length(list_of_files_A2_30_34)
+symptomatic_cum_A2_30_34 = symptomatic_cum/length(list_of_files_A2_30_34)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+
+list_of_files_A3_30_34 <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_30_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_30_34 = symptomatic/length(list_of_files_A3_30_34)
+symptomatic_cum_A3_30_34 = symptomatic_cum/length(list_of_files_A3_30_34)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+
+list_of_files_A2_90_34 <- intersect(list.files(pattern = "A2-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_90_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_90_34 = symptomatic/length(list_of_files_A2_90_34)
+symptomatic_cum_A2_90_34 = symptomatic_cum/length(list_of_files_A2_90_34)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+
+list_of_files_A3_30_34 <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_30_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_30_34 = symptomatic/length(list_of_files_A3_30_34)
+symptomatic_cum_A3_30_34 = symptomatic_cum/length(list_of_files_A3_30_34)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+
+list_of_files_A3_90_34 <- intersect(list.files(pattern = "A3-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_90_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_90_34 = symptomatic/length(list_of_files_A3_90_34)
+symptomatic_cum_A3_90_34 = symptomatic_cum/length(list_of_files_A3_90_34)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+list_of_files_A2_60_34 <- intersect(list.files(pattern = "A2-D60"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_60_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_60_34 = symptomatic/length(list_of_files_A2_60_34)
+symptomatic_cum_A2_60_34 = symptomatic_cum/length(list_of_files_A2_60_34)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A34")
+
+list_of_files_A3_60_34 <- intersect(list.files(pattern = "A3-D60"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_60_34) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_60_34 = symptomatic/length(list_of_files_A3_60_34)
+symptomatic_cum_A3_60_34 = symptomatic_cum/length(list_of_files_A3_60_34)
+```
+
+```{r,include = FALSE}
+# R)_2
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+list_of_files_A1_30_2 <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A1_30_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A1_30_2 = symptomatic/length(list_of_files_A1_30_2)
+symptomatic_cum_A1_30_2 = symptomatic_cum/length(list_of_files_A1_30_2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+list_of_files_A2_30_2 <- intersect(list.files(pattern = "A2-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_30_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_30_2 = symptomatic/length(list_of_files_A2_30_2)
+symptomatic_cum_A2_30_2 = symptomatic_cum/length(list_of_files_A2_30_2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+
+list_of_files_A2_90_2 <- intersect(list.files(pattern = "A2-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_90_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_90_2 = symptomatic/length(list_of_files_A2_90_2)
+symptomatic_cum_A2_90_2 = symptomatic_cum/length(list_of_files_A2_90_2)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+
+list_of_files_A3_30_2 <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_30_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_30_2 = symptomatic/length(list_of_files_A3_30_2)
+symptomatic_cum_A3_30_2 = symptomatic_cum/length(list_of_files_A3_30_2)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+
+list_of_files_A3_90_2 <- intersect(list.files(pattern = "A3-D90"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_90_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_90_2 = symptomatic/length(list_of_files_A3_90_2)
+symptomatic_cum_A3_90_2 = symptomatic_cum/length(list_of_files_A3_90_2)
+```
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+list_of_files_A2_60_2 <- intersect(list.files(pattern = "A2-D60"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A2_60_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A2_60_2 = symptomatic/length(list_of_files_A2_60_2)
+symptomatic_cum_A2_60_2 = symptomatic_cum/length(list_of_files_A2_60_2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A2")
+
+list_of_files_A3_60_2 <- intersect(list.files(pattern = "A3-D60"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A3_60_2) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+}
+
+symptomatic_A3_60_2 = symptomatic/length(list_of_files_A3_60_2)
+symptomatic_cum_A3_60_2 = symptomatic_cum/length(list_of_files_A3_60_2)
+```
+
+
+## Number of Symptomatic Cases Daily 
+
+### Day 30 
+```{r, fig.width=10, fig.height=9, echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=2, col = "black",type = 'l', main="R0_2.0 vs. R0_2.6 vs. R0_34",ylab="number of symptomatic cases daily",xlab="days since introduction"
+,ylim=c(1,100000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=symptomatic_A2_30, lwd=2,lty=5)
+lines(x=days, y=symptomatic_A3_30, lwd=2,lty=3)
+lines(x=days, y=symptomatic_A1_30_34, lwd=2,col = "red")
+lines(x=days, y=symptomatic_A2_30_34, lwd=2,lty=5,col = "red")
+lines(x=days, y=symptomatic_A3_30_34, lwd=2,lty=3,col = "red")
+lines(x=days, y=symptomatic_A1_30_2, lwd=2,col = "blue")
+lines(x=days, y=symptomatic_A2_30_2, lwd=2,lty=5,col = "blue")
+lines(x=days, y=symptomatic_A3_30_2, lwd=2,lty=3,col = "blue")
+
+legend("topleft", legend = c("A1_2","A2_2", "A3_2","A1", "A2", "A3", "A1_34","A2_34", "A3_34"),
+       col = c("blue", "blue", "blue", "black", "black", "black", "red", "red", "red"), lty = c(1, 2, 3, 1, 2, 3, 1, 2, 3), cex = 1)
+```
+
+
+### Day 60 
+```{r, fig.width=10, fig.height=9, echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=2, col = "black",type = 'l', main="R0_2.0 vs. R0_2.6 vs. R0_34",ylab="number of symptomatic cases daily",xlab="days since introduction"
+,ylim=c(1,100000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=symptomatic_A2_60, lwd=2,lty=5)
+lines(x=days, y=symptomatic_A3_60, lwd=2,lty=3)
+lines(x=days, y=symptomatic_A1_30_34, lwd=2,col = "red")
+lines(x=days, y=symptomatic_A2_60_34, lwd=2,lty=5,col = "red")
+lines(x=days, y=symptomatic_A3_60_34, lwd=2,lty=3,col = "red")
+lines(x=days, y=symptomatic_A1_30_2, lwd=2,col = "blue")
+lines(x=days, y=symptomatic_A2_60_2, lwd=2,lty=5,col = "blue")
+lines(x=days, y=symptomatic_A3_60_2, lwd=2,lty=3,col = "blue")
+
+legend("topleft", legend = c("A1_2","A2_2", "A3_2","A1", "A2", "A3", "A1_34","A2_34", "A3_34"),
+       col = c("blue", "blue", "blue", "black", "black", "black", "red", "red", "red"), lty = c(1, 2, 3, 1, 2, 3, 1, 2, 3), cex = 1)
+```
+
+
+
+### Day 90 
+```{r, fig.width=10, fig.height=9, echo=FALSE}
+#par(mfrow=c(1,1),
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30, lwd=2, col = "black",type = 'l', main="R0_2.0 vs. R0_2.6 vs. R0_34",ylab="number of symptomatic cases daily",xlab="days since introduction"
+,ylim=c(1,100000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=symptomatic_A2_90, lwd=2,lty=5)
+lines(x=days, y=symptomatic_A3_90, lwd=2,lty=3)
+lines(x=days, y=symptomatic_A1_30_34, lwd=2,col = "red")
+lines(x=days, y=symptomatic_A2_90_34, lwd=2,lty=5,col = "red")
+lines(x=days, y=symptomatic_A3_90_34, lwd=2,lty=3,col = "red")
+lines(x=days, y=symptomatic_A1_30_2, lwd=2,col = "blue")
+lines(x=days, y=symptomatic_A2_90_2, lwd=2,lty=5,col = "blue")
+lines(x=days, y=symptomatic_A3_90_2, lwd=2,lty=3,col = "blue")
+legend("topleft", legend = c("A1_2","A2_2", "A3_2","A1", "A2", "A3", "A1_34","A2_34", "A3_34"),
+       col = c("blue", "blue", "blue", "black", "black", "black", "red", "red", "red"), lty = c(1, 2, 3, 1, 2, 3, 1, 2, 3), cex = 1)
+```
+
+
+

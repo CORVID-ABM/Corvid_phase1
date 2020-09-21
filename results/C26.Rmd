@@ -1,0 +1,587 @@
+---
+title: "C26"
+author: "LU"
+date: "7/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/A")
+list_of_files_A1_30 <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "summary"))
+
+symptomatic <- 0
+symptomatic_cum <- 0
+for (val in list_of_files_A1_30) {
+  temp <- readLines(val)
+
+  symptomatic.new <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum.new <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  
+  symptomatic = symptomatic + symptomatic.new
+  symptomatic_cum = symptomatic_cum + symptomatic_cum.new
+  newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+}
+
+symptomatic_A1_30 = symptomatic/length(list_of_files_A1_30)
+symptomatic_cum_A1_30 = symptomatic_cum/length(list_of_files_A1_30)
+newlysym_A1_30 <- newlysym/length(list_of_files_A1_30)
+```
+
+```{r, include=FALSE}
+setwd("~/Desktop/MSDS/classes/C26")
+file_list <- list.files(path = "~/Desktop/MSDS/classes/C26", pattern = 'txt')
+```
+
+```{r, include=FALSE}
+extract <- function(files){
+  res <- ""
+  i <- 1
+  while (i < str_length(files)) {
+    ch = substr(files, i, i)
+    if (ch != 'S') {
+      res <- paste(res, ch, sep="")
+    } else {
+      while (ch != '-') {
+        i <- i + 1
+        ch = substr(files, i, i)
+      }
+    }
+    i <- i + 1
+  }
+  res = gsub("-", "_", res)
+  return(substr(res, 1, str_length(res)-11))
+}
+
+```
+
+```{r, include=FALSE}
+library(hash)
+df_freq <- hash()
+df_pos <- hash()
+```
+
+
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/C26")
+listofdfs <- list()
+listofdfnames <- list()
+for (val in file_list) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  extracted_name <- extract(val)
+  #print(extracted_name)
+  if (all(has.key(extracted_name, df_freq)) == FALSE) {
+    df_freq[[extracted_name]] <- 1
+    df_pos[[extracted_name]] <- length(listofdfs)+1
+    #Create a dataframe and put it in the list
+    temp <- readLines(val)
+    symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+    symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+    newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+    df <- data.frame(newlysym,symptomatic)
+    df <- tibble::rowid_to_column(df, "days")
+    listofdfs <- c(listofdfs, df)
+    listofdfnames <- c(listofdfnames, extracted_name)
+    #print(length(listofdfs))
+  } else {
+    pos = df_pos[[extracted_name]]
+    # Find the dataframe and take running average
+    temp <- readLines(val)
+    symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+    symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+    newlysym <- c(symptomatic[1], diff(symptomatic_cum))
+    seed_freq = df_freq[[extracted_name]]
+    for (i in 1:length(symptomatic)) {
+      listofdfs[[pos+2]][i] <- (listofdfs[[pos+2]][i] + symptomatic[[i]]) 
+      listofdfs[[pos+1]][i] <- (listofdfs[[pos+1]][i] + newlysym[[i]])
+    }
+    df_freq[[extracted_name]] <- df_freq[[extracted_name]] + 1.00
+  }
+}
+```
+
+
+```{r, include = FALSE}
+for (i in 1:length(listofdfnames)) {
+  df = data.frame('days' = listofdfs[[3*i-2]], 'newlysym' = listofdfs[[3*i-1]], 'symptomatic' = listofdfs[[3*i]])
+  assign(listofdfnames[[i]], df)
+}
+```
+
+### Day 30 
+#### Newly Symptomatic Cases Daily (incidence)
+```{r, fig.width=14, fig.height=25, echo=FALSE}
+par(mfrow=c(6,3))
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=C1_D30_X1000_T1$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every day",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T1$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T1$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T1$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T1$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red" ,"blue","orange","grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T1$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every day",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T1$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T1$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T1$newlysym/10, lwd=2, col = "grey")
+lines(x=days, y=C2_D30_X200000_T1$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C2, 1k", "C2, 10k", "C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red", "blue","orange","grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C3_D30_X1000_T1$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every day",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T1$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T1$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T1$newlysym/10, lwd=2, col = "grey")
+lines(x=days, y=C3_D30_X200000_T1$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C3, 1k", "C3, 10k", "C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red", "blue","orange","grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C1_D30_X1000_T3$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 3 days",ylab="number of new symptomatic daily, ",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T3$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T3$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T3$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T3$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C1, 1k", "C1, 10k","C1, 50k","C1, 100k","C1, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T3$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 3 days",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T3$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T3$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T3$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T3$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A", "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red","blue","orange", "grey", "brown"),lty = c( 1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C3_D30_X1000_T3$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 3 days",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T3$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T3$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T3$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T3$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A",  "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red", "blue","orange", "grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C1_D30_X1000_T7$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every week",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T7$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T7$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T7$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T7$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red","blue","orange", "grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T7$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every week",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T7$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T7$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T7$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T7$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red", "blue","orange", "grey","brown"),lty = c(1, 1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C3_D30_X1000_T7$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every week",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T7$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T7$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T7$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T7$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C1_D30_X1000_T14$newlysym/10, lwd=0.8, col = "red",type = 'l', main="Compare Numbers of Tests, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T14$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T14$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T14$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T14$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1","C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red","blue","orange","grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T14$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T14$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T14$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T14$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T14$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C3_D30_X1000_T14$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T14$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T14$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T14$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T14$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C1_D30_X1000_T28$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 4 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T28$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T28$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T28$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T28$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1","C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red", "blue","orange","grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T28$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 4 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T28$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T28$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T28$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T28$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C3_D30_X1000_T28$newlysym/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 4 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,5000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T28$newlysym/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T28$newlysym/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T28$newlysym/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T28$newlysym/10, lwd=1, col = "brown")
+lines(x=days, y=newlysym_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+```
+
+
+
+#### Symptomatic Cases Daily (Prevalence)
+```{r, fig.width=14, fig.height=25, echo=FALSE}
+par(mfrow=c(6,3))
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=C1_D30_X1000_T1$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every day",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T1$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T1$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T1$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T1$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1","C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red","blue","orange","grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T1$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every day",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T1$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T1$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T1$symptomatic/10, lwd=2, col = "grey")
+lines(x=days, y=C2_D30_X200000_T1$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C2, 1k", "C2, 10k", "C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red", "blue","orange","grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C3_D30_X1000_T1$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every day",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T1$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T1$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T1$symptomatic/10, lwd=2, col = "grey")
+lines(x=days, y=C3_D30_X200000_T1$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C3, 1k", "C3, 10k", "C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red", "blue","orange","grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C1_D30_X1000_T3$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 3 days",ylab="number of new symptomatic daily, ",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T3$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T3$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T3$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T3$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C1, 1k", "C1, 10k","C1, 50k","C1, 100k","C1, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T3$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 3 days",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T3$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T3$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T3$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T3$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A", "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red","blue","orange", "grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C3_D30_X1000_T3$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 3 days",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T3$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T3$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T3$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T3$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A",  "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red", "blue","orange", "grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C1_D30_X1000_T7$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every week",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T7$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T7$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T7$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T7$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red","blue","orange", "grey", "brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T7$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every week",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T7$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T7$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T7$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T7$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red", "blue","orange", "grey","brown"),lty = c(1, 1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C3_D30_X1000_T7$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every week",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T7$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T7$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T7$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T7$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1",  "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C1_D30_X1000_T14$symptomatic/10, lwd=0.8, col = "red",type = 'l', main="Compare Numbers of Tests, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T14$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T14$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T14$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T14$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1","C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red","blue","orange","grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T14$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T14$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T14$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T14$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T14$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C3_D30_X1000_T14$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T14$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T14$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T14$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T14$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C1_D30_X1000_T28$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 4 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_X10000_T28$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_X50000_T28$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_X100000_T28$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_X200000_T28$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1","C1, 1k", "C1, 10k","C1, 50k","C1, 100k" ,"C1, 200k"),
+       col = c("black","red", "blue","orange","grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+plot(x=days, y=C2_D30_X1000_T28$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 4 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_X10000_T28$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_X50000_T28$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_X100000_T28$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_X200000_T28$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C2, 1k", "C2, 10k","C2, 50k","C2, 100k" ,"C2, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c(1,1,1,1,1,1), cex = 1)
+
+
+plot(x=days, y=C3_D30_X1000_T28$symptomatic/10, lwd=1, col = "red",type = 'l', main="Compare Numbers of Tests, every 4 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,70000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C3_D30_X10000_T28$symptomatic/10, lwd=1, col = "blue")
+lines(x=days, y=C3_D30_X50000_T28$symptomatic/10, lwd=1, col = "orange")
+lines(x=days, y=C3_D30_X100000_T28$symptomatic/10, lwd=1, col = "grey")
+lines(x=days, y=C3_D30_X200000_T28$symptomatic/10, lwd=1, col = "brown")
+lines(x=days, y=symptomatic_A1_30, lwd=1, col = "black")
+
+legend("topleft", legend = c("A1", "C3, 1k", "C3, 10k","C3, 50k","C3, 100k" ,"C3, 200k"),
+       col = c("black","red","blue","orange", "grey","brown"),lty = c( 1,1,1,1,1,1), cex = 1)
+
+```
+
+```{r,include = FALSE}
+setwd("~/Desktop/MSDS/classes/C26")
+list_of_files <- intersect(list.files(pattern = "D30"), list.files(pattern = "X200000-T14"))
+listofdfs <- list() 
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  infected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number infected", temp)]),",")[[1]])
+  cumulativeinfected <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected", temp)]),",")[[1]])
+  newlyinfected <- c(infected[1], diff(cumulativeinfected))
+  total_pop <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("People", temp)]),",")[[1]])
+  known <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative infected and sampled", temp)]),",")[[1]])
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(newlyinfected, cumulativeinfected,total_pop,known,symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  listofdfs <- append(listofdfs, name)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    #assign(paste0("B_30_10000_", i), df)
+    assign(name, df)
+  }
+}
+listofdfs = noquote(listofdfs, right = FALSE)
+```
+
+
+
+#### Check the 10 seeds for C1, D30, X200k, T14
+```{r, echo=FALSE}
+days <- 1:250
+plot(x=days, y=C1_D30_S10520_X200000_T14$symptomatic, lwd=1, col = "red",type = 'l', main="Compare different seeds, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,55000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C1_D30_S14486_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_S15022_X200000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_S17392_X200000_T14$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_S22624_X200000_T14$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=C1_D30_S24335_X200000_T14$symptomatic, lwd=1, col = "black")
+lines(x=days, y=C1_D30_S32058_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=C1_D30_S3227_X200000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=C1_D30_S32607_X200000_T14$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=C1_D30_S6091_X200000_T14$symptomatic, lwd=1, col = "brown")
+
+legend("topleft", legend = c("seed10520", "seed14486", "seed15022","seed17392","seed22624" ,"seed24335", "seed32058", 
+                             "seed3227", "seed32607", "seed6091"),
+       col = c("black","red","blue","orange", "grey","brown", "purple", "green", "yellow", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+```
+
+#### Check the 10 seeds for C2, D30, X200k, T14
+```{r, echo=FALSE}
+days <- 1:250
+plot(x=days, y=C2_D30_S10520_X200000_T14$symptomatic, lwd=1, col = "red",type = 'l', main="Compare different seeds, every 2 weeks",ylab="number of new symptomatic daily",xlab="days since introduction"
+,ylim=c(1,33000))
+#,ylim=c(1,45769.1)
+lines(x=days, y=C2_D30_S14486_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_S15022_X200000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_S17392_X200000_T14$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_S22624_X200000_T14$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=C2_D30_S24335_X200000_T14$symptomatic, lwd=1, col = "black")
+lines(x=days, y=C2_D30_S32058_X200000_T14$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=C2_D30_S3227_X200000_T14$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=C2_D30_S32607_X200000_T14$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=C2_D30_S6091_X200000_T14$symptomatic, lwd=1, col = "brown")
+
+legend("topleft", legend = c("seed10520", "seed14486", "seed15022","seed17392","seed22624" ,"seed24335", "seed32058", 
+                             "seed3227", "seed32607", "seed6091"),
+       col = c("black","red","blue","orange", "grey","brown", "purple", "green", "yellow", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+```
+
+
+
+
+
+
+

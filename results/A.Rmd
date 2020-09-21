@@ -1,0 +1,196 @@
+---
+title: "A"
+author: "LU"
+date: "7/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+list_of_files <- intersect(list.files(pattern = "A1-D30"), list.files(pattern = "summary"))
+
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+ 
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+list_of_files <- intersect(list.files(pattern = "A2-D30"), list.files(pattern = "summary"))
+
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    assign(name, df)
+  }
+}
+```
+
+
+
+
+```{r,include = FALSE}
+# Loading files 
+setwd("~/Desktop/MSDS/classes/scenarioA")
+
+list_of_files <- intersect(list.files(pattern = "A3-D30"), list.files(pattern = "summary"))
+
+for (val in list_of_files) {
+  #name <- append(name, gsub('.{11}$', '', val)) 
+  name <- gsub('.{12}$', '', val)
+  name = gsub("-", "_", name)
+  temp <- readLines(val)
+  symptomatic <-as.numeric(strsplit(gsub("^.*: ","",temp[grep("Number symptomatic", temp)]),",")[[1]])
+  symptomatic_cum <- as.numeric(strsplit(gsub("^.*: ","",temp[grep("Cumulative symptomatic", temp)]),",")[[1]])
+  #x <- data.frame("newlyinfected" = newlyinfected,)
+  df <- data.frame(symptomatic,symptomatic_cum)
+  df <- tibble::rowid_to_column(df, "days")
+  #listofdfs <- append(listofdfs, df)
+  #return(listofdfs)
+  for (i in 1:length(list_of_files)) {
+    assign(name, df)
+  }
+}
+```
+
+```{r,include = FALSE}
+symptomatic_A1_30 = bind_rows(A1_D30_S6668, A1_D30_S14763, A1_D30_S30969, A1_D30_S30746,A1_D30_S26769, A1_D30_S21264, A1_D30_S16592, A1_D30_S13270, A1_D30_S10145,A1_D30_S7216) %>% 
+    # evaluate following calls for each value in the rowname column
+    group_by(days) %>% 
+    # add all non-grouping variables
+    summarise_all(sum)/10
+```
+
+```{r}
+symptomatic_A2_30 = bind_rows(A2_D30_S6668, A2_D30_S14763, A2_D30_S30969, A2_D30_S30746,A2_D30_S26769, A2_D30_S21264, A2_D30_S16592, A2_D30_S13270, A2_D30_S10145,A2_D30_S7216) %>% 
+    # evaluate following calls for each value in the rowname column
+    group_by(days) %>% 
+    # add all non-grouping variables
+    summarise_all(sum)/10
+```
+
+```{r}
+symptomatic_A3_30 = bind_rows(A3_D30_S6668, A3_D30_S14763, A3_D30_S30969, A3_D30_S30746,A3_D30_S26769, A3_D30_S21264, A3_D30_S16592, A3_D30_S13270, A3_D30_S10145,A3_D30_S7216) %>% 
+    # evaluate following calls for each value in the rowname column
+    group_by(days) %>% 
+    # add all non-grouping variables
+    summarise_all(sum)/10
+```
+
+### Average 10 seeds for A1, A2, A3
+```{r, echo=FALSE}
+par(mfrow=c(1,1))
+    #mar=c(3.5,3.5,1,1), #bottom, left, top, and right.
+    #mgp=c(2.0, 0.6, 0))
+days <- 1:250
+plot(x=days, y=symptomatic_A1_30$symptomatic, lwd=1, col = "black",type = 'l', main="Average 10 seeds for A1, A2, A3",ylab="number of new symptomatic daily",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=symptomatic_A2_30$symptomatic, lwd=1, col = "red")
+lines(x=days, y=symptomatic_A3_30$symptomatic, lwd=1, col = "blue")
+legend("topleft", legend = c("A1", "A2", "A3"),
+       col = c("black", "red", "blue"), lty = c(1,1,1),cex = 1)
+```
+
+
+#### Check the 10 seeds for A1, Day 30
+```{r, echo=FALSE}
+days <- 1:250
+plot(x=days, y=A1_D30_S7216$symptomatic, lwd=1, col = "red",type = 'l', main="10 seeds for A1",ylab="number of new symptomatic daily",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=A1_D30_S6668$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=A1_D30_S14763$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=A1_D30_S30969$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=A1_D30_S30746$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=A1_D30_S26769$symptomatic, lwd=1, col = "black")
+lines(x=days, y=A1_D30_S21264$symptomatic, lwd=1, col = "purple")
+lines(x=days, y=A1_D30_S16592$symptomatic, lwd=1, col = "green")
+lines(x=days, y=A1_D30_S13270$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=A1_D30_S10145$symptomatic, lwd=1, col = "coral")
+
+legend("topleft", legend = c("seed7216", "seed6668", "seed14763","seed30969" ,"seed30746", "seed26769", 
+                             "seed21264", "seed16592", "seed13270", "seed10145"),
+       col = c("red","blue","orange", "grey","brown","black", "purple", "green", "dark green", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+```
+
+#### Check the 10 seeds for A2, Day 30
+```{r, echo=FALSE}
+days <- 1:250
+plot(x=days, y=A2_D30_S7216$symptomatic, lwd=1, col = "red",type = 'l', main="10 seeds for A2",ylab="number of new symptomatic daily",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=A2_D30_S6668$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=A2_D30_S14763$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=A2_D30_S30969$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=A2_D30_S30746$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=A2_D30_S26769$symptomatic, lwd=1, col = "black")
+lines(x=days, y=A2_D30_S21264$symptomatic, lwd=1, col = "purple")
+lines(x=days, y=A2_D30_S16592$symptomatic, lwd=1, col = "green")
+lines(x=days, y=A2_D30_S13270$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=A2_D30_S10145$symptomatic, lwd=1, col = "coral")
+
+legend("topleft", legend = c("seed7216", "seed6668", "seed14763","seed30969" ,"seed30746", "seed26769", 
+                             "seed21264", "seed16592", "seed13270", "seed10145"),
+       col = c("red","blue","orange", "grey","brown","black", "purple", "green", "dark green", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+```
+
+
+#### Check the 10 seeds for A3, Day 30
+```{r, echo=FALSE}
+days <- 1:250
+plot(x=days, y=A3_D30_S7216$symptomatic, lwd=1, col = "red",type = 'l', main="10 seeds for A3",ylab="number of new symptomatic daily",xlab="days since introduction"
+)
+#,ylim=c(1,45769.1)
+lines(x=days, y=A3_D30_S6668$symptomatic, lwd=1, col = "blue")
+lines(x=days, y=A3_D30_S14763$symptomatic, lwd=1, col = "orange")
+lines(x=days, y=A3_D30_S30969$symptomatic, lwd=1, col = "grey")
+lines(x=days, y=A3_D30_S30746$symptomatic, lwd=1, col = "brown")
+lines(x=days, y=A3_D30_S26769$symptomatic, lwd=1, col = "black")
+lines(x=days, y=A3_D30_S21264$symptomatic, lwd=1, col = "purple")
+lines(x=days, y=A3_D30_S16592$symptomatic, lwd=1, col = "green")
+lines(x=days, y=A3_D30_S13270$symptomatic, lwd=1, col = "dark green")
+lines(x=days, y=A3_D30_S10145$symptomatic, lwd=1, col = "coral")
+
+legend("topleft", legend = c("seed7216", "seed6668", "seed14763","seed30969" ,"seed30746", "seed26769", 
+                             "seed21264", "seed16592", "seed13270", "seed10145"),
+       col = c("red","blue","orange", "grey","brown","black", "purple", "green", "dark green", "coral"), lty = c( 1,1,1,1,1,1,1,1,1,1),cex = 1)
+```
+
+
+
+
+
