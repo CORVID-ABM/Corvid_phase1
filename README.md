@@ -12,8 +12,8 @@ Our repository contains the 3 main folders:
 - Code
 - Results
 
-The <b>'data'</b> folder contains all the data files namely of Seattle city that has been used in Corvid
-Folder <b>code</b> contains the codes for differents scenarios modelled in our research
+The <b>'data'</b> folder contains all the data files namely of Seattle city that has been used in Corvid <br>
+Folder <b>code</b> contains the codes for differents scenarios modelled in our research <br>
 Lastly, <b>results</b> folder contains the graphical output of the infection spread output by the model
 
 
